@@ -4,23 +4,25 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
- * Экспортёр текста в PDF.
+ * Экспортёр текста в PDF
+ *
  */
-public class PdfExporter {
-    /**
-     * Экспортирует содержимое в PDF файл.
-     *
-     * @param outputPath путь для сохранения pdf файла
-     * @param content    текстовое содержимое
-     * @throws DocumentException   если произошла ошибка PDF генерации
-     * @throws java.io.IOException если не удалось записать файл
-     */
-    public static void export(String outputPath, String content)
-            throws DocumentException, java.io.IOException {
+@Component
+public class PdfExporter implements Exporter {
+
+    @Override
+    public String getFormat() {
+        return "pdf";
+    }
+
+    @Override
+    public void export(String outputPath, String content) {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
             Document pdf = new Document();
@@ -29,6 +31,8 @@ public class PdfExporter {
             pdf.open();
             pdf.add(new Paragraph(content));
             pdf.close();
+        } catch (IOException | DocumentException e) {
+            System.out.println("Ошибка экспорта: " + e.getMessage());
         }
     }
 }
