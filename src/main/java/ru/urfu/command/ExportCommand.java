@@ -18,7 +18,8 @@ public class ExportCommand implements Command {
 
     private final DocumentService documentService;
     private final ExportService exportService;
-    private final Path outputDir = Path.of(System.getProperty("user.home"), "lessonSOLID");
+    private static final Path OUTPUT_DIR =
+            Path.of(System.getProperty("user.home"), "lessonSOLID");
 
     /**
      * Создает команду export
@@ -54,8 +55,8 @@ public class ExportCommand implements Command {
         String format = scanner.nextLine().trim().toLowerCase();
 
         try {
-            Files.createDirectories(outputDir);
-            String outputPath = outputDir.resolve(document.name() + "." + format).toString();
+            Files.createDirectories(OUTPUT_DIR);
+            String outputPath = OUTPUT_DIR.resolve(document.name() + "." + format).toString();
             exportService.export(format, outputPath, document.content());
             System.out.println("Экспорт выполнен: " + outputPath);
         } catch (Exception e) {
